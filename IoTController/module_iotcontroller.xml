@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_iotcontroller" default="compile.module.iotcontroller">
+  <dirname property="module.iotcontroller.basedir" file="${ant.file.module_iotcontroller}"/>
+  
+  <property name="module.jdk.home.iotcontroller" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.iotcontroller" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.iotcontroller" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.iotcontroller" value="-encoding UTF-8 -source 1.6 ${compiler.args}"/>
+  
+  <property name="iotcontroller.output.dir" value="${module.iotcontroller.basedir}/out/production/IoTController"/>
+  <property name="iotcontroller.testoutput.dir" value="${module.iotcontroller.basedir}/out/test/IoTController"/>
+  
+  <path id="iotcontroller.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="iotcontroller.module.production.classpath">
+    <path refid="${module.jdk.classpath.iotcontroller}"/>
+  </path>
+  
+  <path id="iotcontroller.runtime.production.module.classpath">
+    <pathelement location="${iotcontroller.output.dir}"/>
+  </path>
+  
+  <path id="iotcontroller.module.classpath">
+    <path refid="${module.jdk.classpath.iotcontroller}"/>
+    <pathelement location="${iotcontroller.output.dir}"/>
+  </path>
+  
+  <path id="iotcontroller.runtime.module.classpath">
+    <pathelement location="${iotcontroller.testoutput.dir}"/>
+    <pathelement location="${iotcontroller.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.iotcontroller">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.iotcontroller">
+    <patternset refid="excluded.from.module.iotcontroller"/>
+  </patternset>
+  
+  <path id="iotcontroller.module.sourcepath">
+    <dirset dir="${module.iotcontroller.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.iotcontroller" depends="compile.module.iotcontroller.production,compile.module.iotcontroller.tests" description="Compile module IoTController"/>
+  
+  <target name="compile.module.iotcontroller.production" depends="register.custom.compilers" description="Compile module IoTController; production classes">
+    <mkdir dir="${iotcontroller.output.dir}"/>
+    <javac2 destdir="${iotcontroller.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.iotcontroller}/javac">
+      <compilerarg line="${compiler.args.iotcontroller}"/>
+      <bootclasspath refid="iotcontroller.module.bootclasspath"/>
+      <classpath refid="iotcontroller.module.production.classpath"/>
+      <src refid="iotcontroller.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.iotcontroller"/>
+    </javac2>
+    
+    <copy todir="${iotcontroller.output.dir}">
+      <fileset dir="${module.iotcontroller.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.iotcontroller.tests" depends="register.custom.compilers,compile.module.iotcontroller.production" description="compile module IoTController; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.iotcontroller" description="cleanup module">
+    <delete dir="${iotcontroller.output.dir}"/>
+    <delete dir="${iotcontroller.testoutput.dir}"/>
+  </target>
+</project>
